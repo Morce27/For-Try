@@ -1,9 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* ==================== GLOBAL STYLES ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    color: white;
+    font-weight: 600;
+}
+
+/* ==================== BODY BACKGROUND AND LAYOUT ==================== */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #eef2f3;
-  padding: 20px;
-  max-width: 600px;
-  margin: auto;
+    position: relative; 
+    width: 100%; 
+    height: 100dvh;
+
+    /* Background image for the whole page */
+    background-image: url('img/forest.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    /* Centering content */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Overlay blur effect */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    background-color: rgb(0,0,0,0.15);
+    backdrop-filter: blur(2px);
+}
+
+/* Lower font weight class for reuse */
+.regular-txt {
+    font-weight: 400;
+}
+
+/* ==================== MAIN CONTAINER CARD ==================== */
+.main-container {
+    border: solid; /* Consider making this transparent or styled later */
+    width: 300px;
+    height: 500px;
+    z-index: 1;
+
+    /* Frosted glass effect background */
+    background: linear-gradient(to top, rgb(0,0,0,0.15), rgb(255,255,255,0.15));
+    border-radius: 12px;
+    backdrop-filter: blur(75px);
+
+    padding: 20px;
+    
+    /* Soft shadow effect */
+    box-shadow: 3px,5px,1px,0px black; /* NOTE: syntax here is incorrect — should be space-separated, not comma-separated */
+}
+
+/* ==================== INPUT FIELD SECTION ==================== */
+.input-container {
+    position: relative; /* Needed for absolutely positioning the search button */
+}
+
+/* City input field */
+.city-input {
+    width: 100%;
+    padding: 10px 16px;
+    padding-right: 45px; /* Space for the search icon */
+    margin-bottom: 25px;
+
+    border-radius: 99px;
+    border: 3px solid;
+    background: rgb(0,0,0,0.15);
+    outline: none;
+    font-weight: 500;
+
+    transition: 0.25s border;
+}
+
+/* Input on focus */
+.city-input:focus {
+    border: 3px solid rgb(0,0,0,0.15);
+}
+
+/* Input placeholder text */
+.city-input::placeholder {
+    color: rgb(255,255,255,0.75);
+}
+
+/* Search button (icon) */
+.search-btn {
+    position: absolute;
+    right: 16px;
+    top: 35%;
+    transform: translateY(-50%);
+    display: flex;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* ==================== WEATHER INFO DISPLAY ==================== */
+.weather-info {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Location and Date section */
+.location-date-container {
+    border: solid transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.location {
+    border: solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Summary: icon and current temperature/condition */
+.weather-summary-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.weather-summary-img {
+    width: 120px;
+    height: 120px;
+}
+
+.weather-summary-info {
+    text-align: end;
+}
+
+/* Humidity and wind data section */
+.weather-conditions-container {
+    border: solid transparent;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Individual condition item layout */
+.condition-item {
+    border: solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Icon size inside condition item */
+.condition-item span {
+    font-size: 30px;
+}
+
+/* ==================== FORECAST SLIDER ==================== */
+.forecast-item-container {
+    display: flex;
+    gap: 15px;
+    overflow: scroll;
+    padding-bottom: 10px;
+}
+
+/* Custom scrollbar styles */
+.forecast-item-container::-webkit-scrollbar {
+    height: 8px;
+}
+.forecast-item-container::-webkit-scrollbar-track {
+    background: rgb(0,0,0,0.15);
+    border-radius: 99px;
+}
+.forecast-item-container::-webkit-scrollbar-thumb {
+    background: rgb(0,0,0,0.15);
+    border-radius: 99px;
+}
+
+/* Each forecast card */
+.forecast-item {
+    min-width: 70px;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    align-items: center;
+    border-radius: 12px;
+    transition: 0.3s background;
+}
+
+/* Hover effect on forecast card */
+.forecast-item:hover {
+    background: rgba(0,0,0,0.15);
+}
+
+.forecast-item-img {
+    width: 35px;
+    height: 35px;
+}
+
+/* ==================== INFO / ERROR SECTIONS ==================== */
+.section-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+    margin-top: 25%;
+}
+
+.section-message img {
+    height: 150px;
+    width: fit-content;
 }
 
 h1 {
