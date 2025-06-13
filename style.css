@@ -1,0 +1,36 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #eef2f3;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+}
+
+.status p {
+  font-size: 1.1em;
+  margin: 10px 0;
+}
+
+.controls {
+  text-align: center;
+  margin-top: 20px;
+}
+
+a {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+a:hover {
+  background-color: #2980b9;
+}

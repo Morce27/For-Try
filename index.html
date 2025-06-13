@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ESP32 Pump Control</title>
+  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>ESP32 Smart Irrigation</h1>
+
+  <div class="status">
+    <p><strong>Mode:</strong> <span id="mode">Loading...</span></p>
+    <p><strong>Pump 1 (Water - Auto/Manual):</strong> <span id="pump1">Loading...</span></p>
+    <p><strong>Pump 2 (Fertilizer - Manual):</strong> <span id="pump2">Loading...</span></p>
+    <p><strong>Water Tank Level:</strong> <span id="waterTankLevel">Loading...</span></p>
+    <p><strong>Fertilizer Tank Level:</strong> <span id="fertTankLevel">Loading...</span></p>
+  </div>
+
+  <div class="controls">
+    <a href="/togglePump">Toggle Pump 1</a>
+    <a href="/togglePump2">Toggle Pump 2</a>
+    <a href="/toggleMode">Toggle Mode</a>
+  </div>
+</body>
+</html>
