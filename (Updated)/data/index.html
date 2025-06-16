@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ESP32 Pump Control</title>
+  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"/>
+</head>
+<body>
+  <main class="main-container">
+
+    <!-- HEADER -->
+    <header class="input-container">
+      <input class="city-input" placeholder="Search City" type="city">
+      <button class="search-btn">
+        <span class="material-symbols-outlined">search</span>
+      </button>
+    </header>
+
+    <!-- WEATHER SECTION -->
+    <section class="weather-info" style="display: none;">
+      <div class="location-date-container">
+        <div class="location">
+          <span class="material-symbols-outlined">location_on</span>
+          <h4 class="country-txt">Philippines</h4>
+        </div>
+        <h5 class="current-date-txt regular-txt">Mon, 03 March</h5>
+      </div>
+
+      <div class="weather-summary-container">
+        <img src="assets/weather/clouds.svg" class="weather-summary-img">
+        <div class="weather-summary-info">
+          <h1 class="temp-txt">29 °C</h1>
+          <h3 class="condition-txt regular-txt">Clouds</h3>
+        </div>
+      </div>
+
+      <div class="weather-conditions-container">
+        <div class="condition-item">
+          <span class="material-symbols-outlined">water_drop</span>
+          <div class="condition-info">
+            <h5 class="regular-txt">Humidity</h5>
+            <h5 class="humidity-value">55%</h5>
+          </div>
+        </div>
+        <div class="condition-item">
+          <span class="material-symbols-outlined">air</span>
+          <div class="condition-info">
+            <h5 class="regular-txt">Wind Speed</h5>
+            <h5 class="wind-value">2 M/s</h5>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORECAST -->
+      <div class="forecast-item-container">
+        <div class="forecast-item">
+          <h5 class="forecast-item-date regular-txt">04, Mar</h5>
+          <img src="assets/weather/thunderstorm.svg" class="forecast-item-img">
+          <h5 class="forecast-tem-temp">29 °C</h5>
+        </div>
+        <!-- Repeat forecast-item as needed -->
+      </div>
+    </section>
+
+    <section class="search-city section-message">
+      <img src="assets/message/search-city.png" alt="">
+      <div>
+        <h1>Search City</h1>
+        <h4 class="regular-txt">Find out the weather conditions of the city</h4>
+      </div>
+    </section>
+
+    <section class="not-found section-message" style="display: none;">
+      <img src="assets/message/not-found.png" alt="">
+      <div>
+        <h1>City Not Found</h1>
+        <h4 class="regular-txt">Please enter a valid city name</h4>
+      </div>
+    </section>
+
+    <!-- ESP32 Section -->
+    <h1>ESP32 Smart Irrigation</h1>
+
+    <div class="status">
+      <p><strong>Mode:</strong> <span id="mode">Loading...</span></p>
+      <p><strong>Pump 1 (Water - Auto/Manual):</strong> <span id="pump1">Loading...</span></p>
+      <p><strong>Pump 2 (Fertilizer - Manual):</strong> <span id="pump2">Loading...</span></p>
+      <p><strong>Water Tank Level:</strong> <span id="waterTankLevel">Loading...</span></p>
+      <p><strong>Fertilizer Tank Level:</strong> <span id="fertTankLevel">Loading...</span></p>
+      <p><strong>Soil Moisture Level:</strong> <span id="moistureLevel">Loading...</span></p>
+    </div>
+
+    <div class="controls">
+      <a href="/togglePump">Water Pump</a>
+      <a href="/togglePump2">Fertilizer Pump</a>
+      <a href="/toggleMode">Manual/Automatic</a>
+    </div>
+
+  </main>
+</body>
+</html>
