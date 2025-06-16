@@ -1,4 +1,4 @@
- #include <WiFi.h>
+#include <WiFi.h>
 #include <WebServer.h>
 #include <SPIFFS.h>
 
@@ -8,8 +8,8 @@
 #define waterTankSensorPin 35 // Analog pin for water tank level
 #define fertTankSensorPin 32 // Analog pin for fertilizer tank level
 
-const char *ssid = "Marc Gabriel's A12";
-const char *password = "12341234";
+const char *ssid = " wifi name "; // kasama sa nabago
+const char *password = " wifi pass "; // kasama sa nabago
 
 WebServer server(80);
 
@@ -36,34 +36,40 @@ void handleFileRequest(String path) {
     file.close();
 }
 
-void handleData() {
-    int moistureLevel = analogRead(moistureSensorPin1);
-    Serial.println("Raw Moisture Reading: " + String(moistureLevel));
+void handleData() 
+//from this part
+{
+  // Read moisture
+  int raw = analogRead(MOIST_PIN);
+  moisture = constrain(map(raw, 2545, 4095, 100, 0), 0, 100); // Values adjusted
 
-    // Replace 850 and 2200 with your actual calibration values
-    int moisturePercentage = map(moistureLevel, 850, 2200, 100, 0);
-    moisturePercentage = constrain(moisturePercentage, 0, 100);
-
-    if (autoMode) {
-        if (moisturePercentage < 35) pump1Status = true;
-        if (moisturePercentage > 50) pump1Status = false;
-        digitalWrite(pumpPin1, pump1Status ? HIGH : LOW);
+  // Auto mode logic
+  if (autoMode) {
+    if (moisture < 30) {
+      pump1Status = true;
+    } else if (moisture > 60) {
+      pump1Status = false;
     }
+    digitalWrite(PUMP1_PIN, pump1Status ? HIGH : LOW);
+  }
 
-    // Read water levels
-    waterTankLevel = map(analogRead(waterTankSensorPin), 500, 3000, 0, 100);
-    fertTankLevel = map(analogRead(fertTankSensorPin), 500, 3000, 0, 100);
-    waterTankLevel = constrain(waterTankLevel, 0, 100);
-    fertTankLevel = constrain(fertTankLevel, 0, 100);
+  // Tank levels
+  waterLevel = constrain(map(analogRead(WATER_PIN), 500, 3000, 0, 100), 0, 100);
+  fertLevel  = constrain(map(analogRead(FERT_PIN), 500, 3000, 0, 100), 0, 100);
 
-    String json = "{\"moisture\":" + String(moisturePercentage) +
-                  ", \"pump\":" + String(pump1Status) +
-                  ", \"pump2\":" + String(pump2Status) +
-                  ", \"autoMode\":" + String(autoMode) +
-                  ", \"waterTankLevel\":" + String(waterTankLevel) +
-                  ", \"fertTankLevel\":" + String(fertTankLevel) + "}";
-    server.send(200, "application/json", json);
+  // Respond with JSON
+  String json = "{";
+  json += "\"moisture\":" + String(moisture) + ",";
+  json += "\"pump\":" + String(pump1Status ? 1 : 0) + ",";
+  json += "\"pump2\":" + String(pump2Status ? 1 : 0) + ",";
+  json += "\"autoMode\":" + String(autoMode ? 1 : 0) + ",";
+  json += "\"waterTankLevel\":" + String(waterLevel) + ",";
+  json += "\"fertTankLevel\":" + String(fertLevel);
+  json += "}";
+
+  server.send(200, "application/json", json);
 }
+// to this part - all the sensors and relays
 
 void handleTogglePump() {
     if (!autoMode) {
@@ -74,8 +80,7 @@ void handleTogglePump() {
     server.send(303);
 }
 
-// New: Toggle Fertilizer Pump (Manual Only)
-void handleTogglePump2() {
+void handleTogglePump2() { // water pump
     pump2Status = !pump2Status;
     digitalWrite(pumpPin2, pump2Status ? HIGH : LOW);
     server.sendHeader("Location", "/", true);
@@ -91,42 +96,37 @@ void handleToggleMode() {
     server.sendHeader("Location", "/", true);
     server.send(303);
 }
-
+//also changed
 void setup() {
-    Serial.begin(115200);
-    pinMode(pumpPin1, OUTPUT);
-    digitalWrite(pumpPin1, LOW);
+  Serial.begin(115200);
+  pinMode(PUMP1_PIN, OUTPUT); digitalWrite(PUMP1_PIN, LOW);
+  pinMode(PUMP2_PIN, OUTPUT); digitalWrite(PUMP2_PIN, LOW);
 
-    // New pump and sensor setup
-    pinMode(pumpPin2, OUTPUT);
-    digitalWrite(pumpPin2, LOW);
+  if (!SPIFFS.begin(true)) {
+    Serial.println("SPIFFS mount failed!");
+    return;
+  }
 
-    if (!SPIFFS.begin(true)) {
-        Serial.println("SPIFFS Mount Failed");
-        return;
-    }
+  //also changed
+   WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println("\nConnected! IP: " + WiFi.localIP().toString());
 
-    WiFi.begin(ssid, password);
-    Serial.print("Connecting to WiFi...");
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
-        Serial.print(".");
-    }
-    Serial.println("\nWiFi connected.");
-    Serial.println(WiFi.localIP());
+  // Route handlers
+  server.on("/",            [](){ handleFile("/index.html"); });
+  server.on("/style.css",   [](){ handleFile("/style.css"); });
+  server.on("/script.js",   [](){ handleFile("/script.js"); });
+  server.on("/data",        handleData);
+  server.on("/togglePump",  HTTP_GET, handleTogglePump);
+  server.on("/togglePump2", HTTP_GET, handleTogglePump2);
+  server.on("/toggleMode",  HTTP_GET, handleToggleMode);
 
-    server.on("/", []() { handleFileRequest("/index.html"); });
-    server.on("/style.css", []() { handleFileRequest("/style.css"); });
-    server.on("/script.js", []() { handleFileRequest("/script.js"); });
-
-    server.on("/togglePump", handleTogglePump);
-    server.on("/togglePump2", handleTogglePump2); // New route
-    server.on("/toggleMode", handleToggleMode);
-    server.on("/data", handleData);
-
-    server.begin();
+  server.begin();
 }
 
 void loop() {
-    server.handleClient();
+  server.handleClient();
 }

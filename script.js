@@ -176,19 +176,20 @@ function updateForecastItems(weatherData) {
 
     forecastItemsContainer.insertAdjacentHTML('beforeend', forecastItem);
 }
-function updateData() {
-  fetch('/data')
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById('mode').innerText = data.autoMode ? 'Automatic' : 'Manual';
-      document.getElementById('pump1').innerText = data.pump ? 'ON' : 'OFF';
-      document.getElementById('pump2').innerText = data.pump2 ? 'ON' : 'OFF';
-      document.getElementById('waterTankLevel').innerText = data.waterTankLevel + '%';
-      document.getElementById('fertTankLevel').innerText = data.fertTankLevel + '%';
-    })
-    .catch(error => {
-      console.error('Error fetching data:', error);
-    });
+async function fetchESP32Data() {
+  try {
+    const res = await fetch('/data');
+    const d = await res.json();
+
+    modeTxt.innerText = d.autoMode ? 'Automatic' : 'Manual';
+    pump1Txt.innerText = d.pump ? 'ON' : 'OFF';
+    pump2Txt.innerText = d.pump2 ? 'ON' : 'OFF';
+    waterTankLevelTxt.innerText = `${d.waterTankLevel}%`;
+    fertTankLevelTxt.innerText = `${d.fertTankLevel}%`;
+    moistureLevelTxt.innerText = `${d.moisture}%`;
+  } catch (e) {
+    console.error('ESP32 fetch error:', e);
+  }
 }
 
 setInterval(updateData, 1000); // Update every second
